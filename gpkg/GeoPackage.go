@@ -2,6 +2,7 @@ package gpkg
 
 import (
 	"fmt"
+	"os"
 )
 
 import (
@@ -25,6 +26,21 @@ func New(uri string) *GeoPackage {
 	}
 }
 
+func (g *GeoPackage) Exists() bool {
+	if _, err := os.Stat(g.Uri); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+func (g *GeoPackage) Size() (int64, error) {
+	fi, err := os.Stat(g.Uri)
+	if err != nil {
+		return 0, err
+	}
+	return fi.Size(), nil
+}
+
 func (g *GeoPackage) Init() error {
 	db, err := gorm.Open("sqlite3", g.Uri)
 	if err != nil {
@@ -35,9 +51,12 @@ func (g *GeoPackage) Init() error {
 }
 
 func (g *GeoPackage) AutoMigrate() {
+	g.DB.AutoMigrate(TileMatrix{})
+	g.DB.AutoMigrate(TileMatrixSet{})
+	g.DB.AutoMigrate(Metadata{})
+	g.DB.AutoMigrate(MetadataReference{})
+	g.DB.AutoMigrate(SpatialReferenceSystem{})
 	g.DB.AutoMigrate(GeometryColumn{})
-	//db.AutoMigrate(gpkg.TileMatrix{})
-	//db.AutoMigrate(gpkg.TileMatrixSet{})
 }
 
 func (g *GeoPackage) GetSpatialReferenceSystem(srs_id int) (SpatialReferenceSystem, error) {
