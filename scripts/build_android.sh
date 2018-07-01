@@ -3,7 +3,6 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 mkdir -p $DIR/../bin
-NAME=go-dfl
 
 echo "******************"
 echo "Formatting $(realpath $DIR/../gpkg)"
