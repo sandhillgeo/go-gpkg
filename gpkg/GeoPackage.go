@@ -6,6 +6,7 @@ import (
 )
 
 import (
+	"github.com/pkg/errors"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -50,13 +51,32 @@ func (g *GeoPackage) Init() error {
 	return nil
 }
 
-func (g *GeoPackage) AutoMigrate() {
-	g.DB.AutoMigrate(TileMatrix{})
-	g.DB.AutoMigrate(TileMatrixSet{})
-	g.DB.AutoMigrate(Metadata{})
-	g.DB.AutoMigrate(MetadataReference{})
-	g.DB.AutoMigrate(SpatialReferenceSystem{})
-	g.DB.AutoMigrate(GeometryColumn{})
+func (g *GeoPackage) AutoMigrate() error {
+	err := g.DB.AutoMigrate(TileMatrix{}).Error
+	if err != nil {
+		return errors.Wrap(err, "Error migrating TileMatrix")
+	}
+	err = g.DB.AutoMigrate(TileMatrixSet{}).Error
+	if err != nil {
+		return errors.Wrap(err, "Error migrating TileMatrixSet")
+	}
+	err = g.DB.AutoMigrate(Metadata{}).Error
+	if err != nil {
+		return errors.Wrap(err, "Error migrating Metadata")
+	}
+	err = g.DB.AutoMigrate(MetadataReference{}).Error
+	if err != nil {
+		return errors.Wrap(err, "Error migrating MetadataReference")
+	}
+	err = g.DB.AutoMigrate(SpatialReferenceSystem{}).Error
+	if err != nil {
+		return errors.Wrap(err, "Error migrating SpatialReferenceSystem")
+	}
+	err = g.DB.AutoMigrate(GeometryColumn{}).Error
+	if err != nil {
+		return errors.Wrap(err, "Error migrating GeometryColumn")
+	}
+	return nil
 }
 
 func (g *GeoPackage) GetSpatialReferenceSystem(srs_id int) (SpatialReferenceSystem, error) {
