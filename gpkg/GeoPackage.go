@@ -79,6 +79,34 @@ func (g *GeoPackage) AutoMigrate() error {
 	return nil
 }
 
+// AutoMigrateRelatedTables creates tables used by the related tables extension.
+//	- http://www.geopackage.org/18-000.html
+func (g *GeoPackage) AutoMigrateRelatedTables() error {
+
+	err := g.DB.AutoMigrate(Relation{}).Error
+	if err != nil {
+		return errors.Wrap(err, "Error migrating Relation")
+	}
+
+	err = g.DB.AutoMigrate(Extension{}).Error
+	if err != nil {
+		return errors.Wrap(err, "Error migrating Extension")
+	}
+
+  extension := Extension{
+		Table:      Relation{}.TableName(),
+		Column:     nil,
+		Extension:  "related_tables",
+		Definition: "TBD",
+		Scope:      "read-write",
+	}
+	err = g.DB.Create(&extension).Error
+	if err != nil {
+		return errors.Wrap(err, "Error creating extension "+fmt.Sprint(extension))
+	}
+	return nil
+}
+
 func (g *GeoPackage) GetSpatialReferenceSystem(srs_id int) (SpatialReferenceSystem, error) {
 	srs := SpatialReferenceSystem{}
 	err := g.DB.First(&srs, SpatialReferenceSystem{SpatialReferenceSystemId: &srs_id}).Error
