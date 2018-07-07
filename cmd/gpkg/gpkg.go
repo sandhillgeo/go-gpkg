@@ -15,7 +15,7 @@ import (
 	"github.com/sandhillgeo/go-gpkg/gpkg"
 )
 
-var GO_GPKG_VERSION = "0.0.1"
+var GO_GPKG_VERSION = "0.0.2"
 
 func printUsage() {
 	fmt.Println("Usage: gpkg -output_uri OUTPUT_URI [-related_tables] [-version] [-help]")
