@@ -97,7 +97,7 @@ func (g *GeoPackage) AutoMigrateRelatedTables() error {
 		return errors.Wrap(err, "Error migrating Extension")
 	}
 
-  extension := Extension{
+	extension := Extension{
 		Table:      Relation{}.TableName(),
 		Column:     nil,
 		Extension:  "related_tables",
