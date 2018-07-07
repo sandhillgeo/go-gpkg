@@ -1,7 +1,7 @@
 package gpkg
 
 type TileMatrixSet struct {
-	Name                     string   `gorm:"column:table_name;not null;primary_key"`
+	Name                     string   `"type:text" gorm:"column:table_name;not null;primary_key"`
 	SpatialReferenceSystemId *int     `gorm:"column:srs_id;not null"`
 	MinX                     *float64 `gorm:"column:min_x;not null"`
 	MinY                     *float64 `gorm:"column:min_y;not null"`

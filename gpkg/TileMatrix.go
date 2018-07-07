@@ -5,7 +5,7 @@ import (
 )
 
 type TileMatrix struct {
-	Name string `gorm:"column:table_name;not null"`
+	Name string `sql:"type:text" gorm:"column:table_name;not null"`
 	//ZoomLevel sql.NullInt64 `gorm:"column:zoom_level;not null"`
 	ZoomLevel    NullInt8 `gorm:"column:zoom_level;not null"`
 	MatrixWidth  uint64   `gorm:"column:matrix_width;not null"`

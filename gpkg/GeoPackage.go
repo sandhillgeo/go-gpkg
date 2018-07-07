@@ -52,7 +52,11 @@ func (g *GeoPackage) Init() error {
 }
 
 func (g *GeoPackage) AutoMigrate() error {
-	err := g.DB.AutoMigrate(TileMatrix{}).Error
+	err := g.DB.AutoMigrate(Content{}).Error
+	if err != nil {
+		return errors.Wrap(err, "Error migrating Content")
+	}
+	err = g.DB.AutoMigrate(TileMatrix{}).Error
 	if err != nil {
 		return errors.Wrap(err, "Error migrating TileMatrix")
 	}
@@ -100,7 +104,7 @@ func (g *GeoPackage) AutoMigrateRelatedTables() error {
 		Definition: "TBD",
 		Scope:      "read-write",
 	}
-	err = g.DB.Create(&extension).Error
+	err = g.DB.Where(extension).Assign(extension).FirstOrCreate(&extension).Error
 	if err != nil {
 		return errors.Wrap(err, "Error creating extension "+fmt.Sprint(extension))
 	}
